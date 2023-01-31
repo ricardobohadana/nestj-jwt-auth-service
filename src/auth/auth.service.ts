@@ -10,16 +10,18 @@ import { scryptSync, timingSafeEqual } from 'node:crypto';
 import { LoginRequest } from '../core/models/requests/login.request';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { User } from '../core/models/entities/User';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   private salts: string;
 
   constructor(
+    private configService: ConfigService,
     private readonly userRepository: IUserRepository,
     private jwtService: JwtService,
   ) {
-    this.salts = '9a2f467e399b8c054deb752ff870d278';
+    this.salts = configService.get<string>('SECRET_KEY');
   }
 
   private hashPassword(password: string): string {
