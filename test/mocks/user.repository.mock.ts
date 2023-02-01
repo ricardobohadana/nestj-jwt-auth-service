@@ -13,7 +13,7 @@ export class UserRepositoryMock implements IUserRepository {
         email: 'Denis67@hotmail.com',
         username: 'Beulah.Cummings',
         password:
-          '6e3c2409e1addeb41c967b1ddfe85b4350a13f65cf979ae8b4a79da839e45616d8e2f982fc7e3028c5e9eabbc74361e23dfa8a25de53b9a614e6a18c5f281ba0',
+          'fdb0077e8f7d3e0b14fd94c74c384fc4c38b1807e1fabafef7ab6ed81a98deb2c7d09c924468dda9ce8ae5c7f027f5fdbf4810c66756734c3c1bed938978a919',
         name: 'Denis',
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     @Inject(ConfigService)
     protected configService: ConfigService,
   ) {
-    const secretKey = configService.get<string>('SECRET_KEY') || 'test_key';
+    const secretKey = configService.get<string>('SECRET_KEY');
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RegisterRequest } from '../core/models/requests/register.request';
-import { authModuleImports, authModuleProviders } from './auth.module';
+import { authModuleImports } from './auth.module';
 import { AuthService } from './auth.service';
 import { faker } from '@faker-js/faker';
 import { LoginRequest } from '../core/models/requests/login.request';
@@ -45,7 +45,6 @@ describe('AuthService', () => {
     registerRequest.password = faker.internet.password(20) + '_B1';
     registerRequest.passwordConfirmation = registerRequest.password;
     registerRequest.username = faker.internet.userName();
-    console.log(registerRequest);
     expect(async () => await service.register(registerRequest)).not.toThrow();
   });
 
