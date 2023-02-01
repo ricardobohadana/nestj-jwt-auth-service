@@ -5,17 +5,31 @@ import { AuthService } from './auth.service';
 import { faker } from '@faker-js/faker';
 import { LoginRequest } from '../core/models/requests/login.request';
 import { UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../prisma/prisma.service';
+import { JwtStrategy } from './strategy/jwt.strategy';
+import { IUserRepository } from '../core/interfaces/repositories/iuser.repository';
+import { UserRepositoryMock } from '../../test/mocks/user.repository.mock';
 
 describe('AuthService', () => {
   let service: AuthService;
 
-  const loginUsername = 'Raleigh36';
-  const loginPassword = 'QqvPB5SYLydY2Q1fUBHj_B';
+  const loginUsername = 'Beulah.Cummings';
+  const loginPassword = 'EDFXyY16mMx53KJtP3z5_B1';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: authModuleImports,
-      providers: authModuleProviders,
+      providers: [
+        ConfigService,
+        PrismaService,
+        AuthService,
+        JwtStrategy,
+        {
+          provide: IUserRepository,
+          useClass: UserRepositoryMock,
+        },
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -28,9 +42,10 @@ describe('AuthService', () => {
   it('Should register a valid user', async () => {
     const registerRequest = new RegisterRequest();
     registerRequest.email = faker.internet.email();
-    registerRequest.password = faker.internet.password(20) + '_B';
+    registerRequest.password = faker.internet.password(20) + '_B1';
     registerRequest.passwordConfirmation = registerRequest.password;
     registerRequest.username = faker.internet.userName();
+    console.log(registerRequest);
     expect(async () => await service.register(registerRequest)).not.toThrow();
   });
 

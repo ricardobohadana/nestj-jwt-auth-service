@@ -7,6 +7,7 @@ import { IUserRepository } from '../core/interfaces/repositories/iuser.repositor
 import { UserRepository } from '../repositories/user.repository';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppModule } from '../app.module';
 
 export const authModuleProviders = [
   ConfigService,
@@ -24,7 +25,7 @@ export const authModuleImports = [
     imports: [ConfigModule],
     useFactory: async (configService: ConfigService) => {
       return {
-        secret: configService.get<string>('SECRET_KEY'),
+        secret: configService.get<string>('SECRET_KEY') || 'test_key',
         signOptions: { expiresIn: '60s' },
       };
     },

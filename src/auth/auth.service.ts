@@ -21,7 +21,9 @@ export class AuthService {
     private readonly userRepository: IUserRepository,
     private jwtService: JwtService,
   ) {
-    this.salts = configService.get<string>('SECRET_KEY');
+    this.salts =
+      this.configService.get<string>('SECRET_KEY') ||
+      '06b5397d64631a58d8f3010db8483925';
   }
 
   private hashPassword(password: string): string {
