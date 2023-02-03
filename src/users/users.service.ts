@@ -5,7 +5,11 @@ import { IUserRepository } from '../core/interfaces/repositories/iuser.repositor
 export class UsersService {
   constructor(private readonly userRepository: IUserRepository) {}
 
-  async findByUsername(username: string) {
-    return await this.userRepository.getUser({ username });
+  async findByUniqueValue(uniqueKeys: {
+    id?: string;
+    username?: string;
+    email?: string;
+  }) {
+    return await this.userRepository.getUser({ ...uniqueKeys });
   }
 }
