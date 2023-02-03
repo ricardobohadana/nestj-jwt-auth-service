@@ -12,6 +12,7 @@ import { IUserRepository } from '../core/interfaces/repositories/iuser.repositor
 import { UserRepositoryMock } from '../../test/mocks/user.repository.mock';
 import { IUserPersistentTokensRepository } from '../core/interfaces/repositories/iuserPersistentTokens.repository';
 import { UserPersistentTokensRepositoryMock } from '../../test/mocks/userPersistentTokens.repository.mock';
+import { UsersService } from '../users/users.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -26,6 +27,7 @@ describe('AuthService', () => {
         ConfigService,
         PrismaService,
         AuthService,
+        UsersService,
         JwtStrategy,
         {
           provide: IUserRepository,
