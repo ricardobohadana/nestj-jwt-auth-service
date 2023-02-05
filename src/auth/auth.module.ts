@@ -4,19 +4,28 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { IUserRepository } from '../core/interfaces/repositories/iuser.repository';
-import { UserRepository } from '../repositories/user.repository';
+import { UserRepository } from '../core/repositories/user.repository';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppModule } from '../app.module';
+import { IUserPersistentTokensRepository } from '../core/interfaces/repositories/iuserPersistentTokens.repository';
+import { UserPersistentTokensRepository } from '../core/repositories/userPersistentTokens.repository';
+import { RefreshJwtStrategy } from './strategy/refresh-jwt.strategy';
+import { UsersService } from '../users/users.service';
 
 export const authModuleProviders = [
   ConfigService,
   PrismaService,
   AuthService,
+  UsersService,
   JwtStrategy,
+  RefreshJwtStrategy,
   {
     provide: IUserRepository,
     useClass: UserRepository,
+  },
+  {
+    provide: IUserPersistentTokensRepository,
+    useClass: UserPersistentTokensRepository,
   },
 ];
 

@@ -1,7 +1,12 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Request } from '@nestjs/common';
+import { Get, UseGuards } from '@nestjs/common/decorators';
+import { UnauthorizedException } from '@nestjs/common/exceptions';
+import { Request as RequestType } from 'express';
 import { LoginRequest } from '../core/models/requests/login.request';
 import { RegisterRequest } from '../core/models/requests/register.request';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { RefreshJwtAuthGuard } from './guard/refresh-jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -9,16 +14,25 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginRequest: LoginRequest) {
-    return this.authService.login(loginRequest);
+    return await this.authService.login(loginRequest);
   }
 
   @Post('register')
   async register(@Body() registerRequest: RegisterRequest) {
     return await this.authService.register({ ...registerRequest });
   }
-  // @Post('logout')
-  // async logout(@Request() req) {
-  //   const { id, username } = req.user as { id: string; username; string };
-  //   return this.authService.logout({ id, username });
-  // }
+
+  @UseGuards(RefreshJwtAuthGuard)
+  @Post('logout')
+  async logout(@Request() req: RequestType) {
+    const { id } = req.user;
+    return await this.authService.logout(id);
+  }
+
+  @UseGuards(RefreshJwtAuthGuard)
+  @Get('refresh-access')
+  refreshAccessToken(@Request() req: RequestType) {
+    if (!req.user) throw new UnauthorizedException();
+    return this.authService.refreshAccessToken(req.user);
+  }
 }

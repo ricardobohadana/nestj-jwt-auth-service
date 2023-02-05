@@ -8,6 +8,12 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
   app.useGlobalPipes(new ValidationPipe());
+
+  // app.enableCors({
+  //   origin: (requestOrigin, callback) => {
+  //     return callback(null, true);
+  //   },
+  // });
   await app.listen(port || 3000);
 }
 bootstrap();

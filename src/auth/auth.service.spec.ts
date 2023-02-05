@@ -10,6 +10,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { IUserRepository } from '../core/interfaces/repositories/iuser.repository';
 import { UserRepositoryMock } from '../../test/mocks/user.repository.mock';
+import { IUserPersistentTokensRepository } from '../core/interfaces/repositories/iuserPersistentTokens.repository';
+import { UserPersistentTokensRepositoryMock } from '../../test/mocks/userPersistentTokens.repository.mock';
+import { UsersService } from '../users/users.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -24,10 +27,15 @@ describe('AuthService', () => {
         ConfigService,
         PrismaService,
         AuthService,
+        UsersService,
         JwtStrategy,
         {
           provide: IUserRepository,
           useClass: UserRepositoryMock,
+        },
+        {
+          provide: IUserPersistentTokensRepository,
+          useClass: UserPersistentTokensRepositoryMock,
         },
       ],
     }).compile();
@@ -48,7 +56,7 @@ describe('AuthService', () => {
     expect(async () => await service.register(registerRequest)).not.toThrow();
   });
 
-  it('Should login a valid user without rememberMe', async () => {
+  it('Should authenticate a valid user without rememberMe', async () => {
     const loginRequest = new LoginRequest();
     loginRequest.username = loginUsername;
     loginRequest.password = loginPassword;
@@ -59,7 +67,7 @@ describe('AuthService', () => {
     expect(response).not.toHaveProperty('refresh_token');
   });
 
-  it('Should login a valid user with rememberMe', async () => {
+  it('Should authenticate a valid user with rememberMe', async () => {
     const loginRequest = new LoginRequest();
     loginRequest.username = loginUsername;
     loginRequest.password = loginPassword;
@@ -71,7 +79,7 @@ describe('AuthService', () => {
     expect(response.access_token).not.toEqual(response.refresh_token);
   });
 
-  it('Should not login an invalid user', async () => {
+  it('Should not authenticate an invalid user', async () => {
     const loginRequest = new LoginRequest();
     loginRequest.username = loginUsername + 'invalid';
     loginRequest.password = loginPassword;
@@ -82,7 +90,7 @@ describe('AuthService', () => {
     );
   });
 
-  it('Should not login a user with an invalid password', async () => {
+  it('Should not authenticate an user with an invalid password', async () => {
     const loginRequest = new LoginRequest();
     loginRequest.username = loginUsername;
     loginRequest.password = loginPassword + 'invalid';
@@ -92,4 +100,10 @@ describe('AuthService', () => {
       UnauthorizedException,
     );
   });
+
+  // it('Should issue a new access_token given a valid refresh_token', async () => {
+  //   const refreshToken =
+  //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwIiwidXNlcm5hbWUiOiJCZXVsYWguQ3VtbWluZ3MiLCJpYXQiOjE2NzUzODU2MjUsImV4cCI6MTY3NTk5MDQyNX0.E0IkG4b3fXtEa0egxxswFCPJxTn_1Z0g6UMoguYFGeY';
+
+  // });
 });

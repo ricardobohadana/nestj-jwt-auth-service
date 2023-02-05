@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common/decorators';
 import { Prisma, User } from '@prisma/client';
-import { IUserRepository } from '../core/interfaces/repositories/iuser.repository';
-import { PrismaService } from '../prisma/prisma.service';
+import { IUserRepository } from '../interfaces/repositories/iuser.repository';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -25,8 +25,9 @@ export class UserRepository implements IUserRepository {
   async getUser(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User> {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: userWhereUniqueInput,
     });
+    return user ? (user.isActive ? user : null) : null;
   }
 }

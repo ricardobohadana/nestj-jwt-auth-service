@@ -4,6 +4,8 @@ import {
   IsOptional,
   IsString,
   IsStrongPassword,
+  Matches,
+  MinLength,
 } from 'class-validator';
 
 export class RegisterRequest {
@@ -17,9 +19,11 @@ export class RegisterRequest {
   @IsOptional()
   name?: string;
 
-  @IsStrongPassword({ minLength: 7, minNumbers: 1 })
+  @IsString()
+  @MinLength(5)
   password: string;
 
-  @IsStrongPassword({ minLength: 7, minNumbers: 1 })
+  @IsString()
+  @MinLength(5)
   passwordConfirmation: string;
 }
